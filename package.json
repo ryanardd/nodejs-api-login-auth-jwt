@@ -1,12 +1,39 @@
 {
-  "name": "login-auth-jwt",
-  "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "keywords": [],
-  "author": "",
-  "license": "ISC"
+    "name": "login-auth-jwt",
+    "version": "1.0.0",
+    "description": "NodeJS Login Auth with JWT",
+    "main": "src/main.js",
+    "type": "module",
+    "scripts": {
+        "test": "jest"
+    },
+    "jest": {
+        "transform": {
+            "^.+\\.[t|j]sx?$": "babel-jest"
+        }
+    },
+    "keywords": [],
+    "author": "Ryan Ardiansyah",
+    "license": "ISC",
+    "dependencies": {
+        "bcrypt": "^5.1.1",
+        "cookie-parser": "^1.4.6",
+        "express": "^4.18.2",
+        "joi": "^17.10.1",
+        "jsonwebtoken": "^9.0.2",
+        "winston": "^3.10.0"
+    },
+    "devDependencies": {
+        "@babel/preset-env": "^7.22.15",
+        "@types/bcrypt": "^5.0.0",
+        "@types/cookie-parser": "^1.4.4",
+        "@types/express": "^4.17.17",
+        "@types/jest": "^29.5.4",
+        "@types/jsonwebtoken": "^9.0.2",
+        "@types/supertest": "^2.0.12",
+        "babel-jest": "^29.6.4",
+        "jest": "^29.6.4",
+        "prisma": "^5.2.0",
+        "supertest": "^6.3.3"
+    }
 }
