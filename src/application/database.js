@@ -4,40 +4,38 @@ import { logger } from "./logging";
 const prismaClient = new PrismaClient({
     log: [
         {
-            emit: 'event',
-            level: "query"
+            emit: "event",
+            level: "query",
         },
         {
             emit: "event",
-            level: 'error'
+            level: "error",
         },
         {
             emit: "event",
-            level: 'info'
+            level: "info",
         },
         {
-            emit: 'event',
-            level: 'warn'
-        }
-    ]
+            emit: "event",
+            level: "warn",
+        },
+    ],
 });
 
-prismaClient.$on("query", () => {
-    logger.info(e)
-})
+prismaClient.$on("query", (e) => {
+    logger.query(e);
+});
 
-prismaClient.$on("error", () => {
-    logger.error(e)
-})
+prismaClient.$on("error", (e) => {
+    logger.error(e);
+});
 
-prismaClient.$on("info", () => {
-    logger.info(e)
-})
+prismaClient.$on("info", (e) => {
+    logger.info(e);
+});
 
-prismaClient.$on("warn", () => {
-    logger.warn(e)
-})
+prismaClient.$on("warn", (e) => {
+    logger.warn(e);
+});
 
-export {
-    prismaClient
-}
+export { prismaClient };

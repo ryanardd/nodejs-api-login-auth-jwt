@@ -3,6 +3,7 @@ import { ResponseError } from "../error/response-error";
 export const validate = (schema, request) => {
     const result = schema.validate(request, {
         abortEarly: false,
+        allowUnknown: false,
     });
 
     if (result.error) {

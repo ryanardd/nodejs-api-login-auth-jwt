@@ -21,7 +21,7 @@ const register = async (request) => {
     }
 
     // lakukan hashing password
-    user.password = bcrypt.hash(user.password, 10);
+    user.password = await bcrypt.hash(user.password, 10);
 
     // jika user belum ada
     return prismaClient.user.create({
