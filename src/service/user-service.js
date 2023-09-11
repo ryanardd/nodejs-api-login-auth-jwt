@@ -1,8 +1,10 @@
-import { registerUserValidation } from "../validation/user-validation";
+import { loginUserValidation, registerUserValidation } from "../validation/user-validation";
 import { validate } from "../validation/validation";
 import { prismaClient } from "../application/database";
 import { ResponseError } from "../error/response-error";
 import bcrypt from "bcrypt";
+import jwt from "jsonwebtoken";
+import { logger } from "../application/logging";
 
 const register = async (request) => {
     // lakukan validation schema
@@ -33,4 +35,56 @@ const register = async (request) => {
     });
 };
 
-export default { register };
+const login = async (request) => {
+    // lakukan validation
+    request = validate(loginUserValidation, request);
+
+    // cek db
+    const users = await prismaClient.user.findUnique({
+        where: {
+            id: request.id,
+        },
+        select: {
+            name: true,
+            password: true,
+        },
+    });
+
+    // jika tidak ada
+    if (!users) {
+        throw new ResponseError(404, "user is not found");
+    }
+    console.info(users.body);
+
+    const comparePass = await bcrypt.compare(request.password, users.password);
+    // jika tidak cocok
+    if (!comparePass) {
+        throw new ResponseError(401, "name or password wrong");
+    }
+
+    // akses token
+    // const accessToken = jwt.sign(users, process.env.ACCESS_TOKEN_SECRET, {
+    //     expiresIn: "20s",
+    // });
+    // const refreshToken = jwt.sign(users, process.env.REFRESH_TOKEN_SECRET, {
+    //     expiresIn: "1d",
+    // });
+
+    // update
+    return prismaClient.user.update({
+        data: {
+            token: refreshToken,
+        },
+        where: {
+            name: users.name,
+        },
+        select: {
+            token: true,
+        },
+    });
+};
+
+export default {
+    register,
+    login,
+};

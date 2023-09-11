@@ -2,7 +2,7 @@ import supertest from "supertest";
 // import bcrypt from "bcrypt";
 import { web } from "../src/application/web";
 import { logger } from "../src/application/logging";
-import { removeTestUser } from "./test-util";
+import { createTestUser, removeTestUser } from "./test-util";
 
 describe("POST /api/users", () => {
     afterEach(async () => {
@@ -34,5 +34,26 @@ describe("POST /api/users", () => {
         logger.info(result.body);
 
         expect(result.status).toBe(400);
+    });
+});
+
+describe("POST /api/users/login", () => {
+    beforeEach(async () => {
+        await createTestUser();
+    });
+
+    afterEach(async () => {
+        await removeTestUser();
+    });
+
+    it("should can login user", async () => {
+        const result = await supertest(web).post("/api/users/login").send({
+            name: "test",
+            password: "rahasia",
+        });
+
+        // logger.info(result.body);
+
+        expect(result.status).toBe(200);
     });
 });
