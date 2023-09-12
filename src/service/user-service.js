@@ -1,7 +1,7 @@
-import { loginUserValidation, registerUserValidation } from "../validation/user-validation";
-import { validate } from "../validation/validation";
-import { prismaClient } from "../application/database";
-import { ResponseError } from "../error/response-error";
+import { loginUserValidation, registerUserValidation } from "../validation/user-validation.js";
+import { validate } from "../validation/validation.js";
+import { prismaClient } from "../application/database.js";
+import { ResponseError } from "../error/response-error.js";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import { logger } from "../application/logging";
@@ -40,21 +40,23 @@ const login = async (request) => {
     request = validate(loginUserValidation, request);
 
     // cek db
-    const users = await prismaClient.user.findUnique({
+    const users = await prismaClient.user.findFirst({
         where: {
             id: request.id,
+            name: request.name,
         },
         select: {
+            id: true,
             name: true,
             password: true,
         },
     });
 
+    console.log(users);
     // jika tidak ada
     if (!users) {
         throw new ResponseError(404, "user is not found");
     }
-    console.info(users.body);
 
     const comparePass = await bcrypt.compare(request.password, users.password);
     // jika tidak cocok
@@ -63,20 +65,21 @@ const login = async (request) => {
     }
 
     // akses token
-    // const accessToken = jwt.sign(users, process.env.ACCESS_TOKEN_SECRET, {
-    //     expiresIn: "20s",
-    // });
-    // const refreshToken = jwt.sign(users, process.env.REFRESH_TOKEN_SECRET, {
-    //     expiresIn: "1d",
-    // });
+    const accessToken = jwt.sign(users, process.env.ACCESS_TOKEN_SECRET, {
+        expiresIn: "20s",
+    });
+    const refreshToken = jwt.sign(users, process.env.REFRESH_TOKEN_SECRET, {
+        expiresIn: "1d",
+    });
 
+    users.token = refreshToken;
     // update
     return prismaClient.user.update({
         data: {
             token: refreshToken,
         },
         where: {
-            name: users.name,
+            id: users.id,
         },
         select: {
             token: true,

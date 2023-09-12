@@ -1,6 +1,6 @@
 import express from "express";
-import { publicRouter } from "../route/public-route";
-import { errorMiddleware } from "../error/error-middleware";
+import { publicRouter } from "../route/public-route.js";
+import { errorMiddleware } from "../error/error-middleware.js";
 import dotenv from "dotenv";
 
 dotenv.config();
