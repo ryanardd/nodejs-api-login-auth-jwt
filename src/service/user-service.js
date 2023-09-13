@@ -30,6 +30,7 @@ const register = async (request) => {
         data: user,
         select: {
             name: true,
+            username: true,
             email: true,
         },
     });
@@ -40,46 +41,39 @@ const login = async (request) => {
     request = validate(loginUserValidation, request);
 
     // cek db
-    const users = await prismaClient.user.findFirst({
+    const users = await prismaClient.user.findUnique({
         where: {
-            id: request.id,
-            name: request.name,
+            username: request.username,
         },
         select: {
-            id: true,
-            name: true,
+            username: true,
             password: true,
         },
     });
 
-    console.log(users);
     // jika tidak ada
     if (!users) {
-        throw new ResponseError(404, "user is not found");
+        throw new ResponseError(401, "username or password wrong");
     }
 
     const comparePass = await bcrypt.compare(request.password, users.password);
     // jika tidak cocok
     if (!comparePass) {
-        throw new ResponseError(401, "name or password wrong");
+        throw new ResponseError(401, "username or password wrong");
     }
 
     // akses token
-    const accessToken = jwt.sign(users, process.env.ACCESS_TOKEN_SECRET, {
+    const token = jwt.sign(users, process.env.ACCESS_TOKEN_SECRET, {
         expiresIn: "20s",
     });
-    const refreshToken = jwt.sign(users, process.env.REFRESH_TOKEN_SECRET, {
-        expiresIn: "1d",
-    });
 
-    users.token = refreshToken;
     // update
     return prismaClient.user.update({
         data: {
-            token: refreshToken,
+            token: token,
         },
         where: {
-            id: users.id,
+            username: users.username,
         },
         select: {
             token: true,

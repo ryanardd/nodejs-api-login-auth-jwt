@@ -12,6 +12,7 @@ describe("POST /api/users", () => {
     it("should can register new user", async () => {
         const result = await supertest(web).post("/api/users").send({
             name: "test",
+            username: "usertest",
             email: "test@gmail.com",
             password: "rahasia",
         });
@@ -27,6 +28,7 @@ describe("POST /api/users", () => {
     it("should reject if request invalid", async () => {
         const result = await supertest(web).post("/api/users").send({
             name: "",
+            username: "",
             email: "",
             password: "",
         });
@@ -48,11 +50,11 @@ describe("POST /api/users/login", () => {
 
     it("should can login user", async () => {
         const result = await supertest(web).post("/api/users/login").send({
-            name: "test",
+            username: "usertest",
             password: "rahasia",
         });
-        console.log(result.body.data);
-        // logger.info(result.body);
+        // console.log(result.body.data);
+        logger.info(result.body);
 
         expect(result.status).toBe(200);
     });
