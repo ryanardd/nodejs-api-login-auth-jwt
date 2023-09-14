@@ -53,32 +53,33 @@ describe("POST /api/users/login", () => {
             username: "usertest",
             password: "rahasia",
         });
-        // console.log(result.body.data);
+
         logger.info(result.body);
 
         expect(result.status).toBe(200);
+        expect(result.body.data.token).toBeDefined();
+        expect(result.body.data.password).not.toBe("rahasia");
+        expect(result.body.data.password).toBeDefined();
+        expect(result.body.data.username).toBe("usertest");
     });
 
     it("should reject login name invalid", async () => {
         const result = await supertest(web).post("/api/users/login").send({
-            name: "test1",
+            username: "test1",
             password: "rahasia",
         });
-        console.log(result.body.data);
-        logger.info(result.body);
-        // logger.info(result.body);
 
-        expect(result.status).toBe(404);
+        logger.info(result.body);
+
+        expect(result.status).toBe(401);
     });
 
     it("should reject login password invalid", async () => {
         const result = await supertest(web).post("/api/users/login").send({
-            name: "test",
+            username: "usertest",
             password: "sadsdd",
         });
-        console.log(result.body.data);
         logger.info(result.body);
-        // logger.info(result.body);
 
         expect(result.status).toBe(401);
     });

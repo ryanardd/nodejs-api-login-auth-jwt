@@ -65,21 +65,8 @@ const login = async (request) => {
     // akses token
     const token = jwt.sign(users.username, process.env.ACCESS_TOKEN_SECRET);
 
-    return token;
-    // update
-    // const user = await prismaClient.user.update({
-    //     data: {
-    //         token: token,
-    //     },
-    //     where: {
-    //         username: users.username,
-    //     },
-    //     select: {
-    //         token: true,
-    //     },
-    // });
-
-    // return user;
+    users.token = token;
+    return users;
 };
 
 export default {
