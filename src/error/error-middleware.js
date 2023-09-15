@@ -12,13 +12,14 @@ const errorMiddleware = async (err, req, res, next) => {
                 error: err.message,
             })
             .end();
-    } else {
-        res.status(500)
-            .json({
-                error: err.message,
-            })
-            .end();
     }
+    // else {
+    //     res.status(500)
+    //         .json({
+    //             error: err.message,
+    //         })
+    //         .end();
+    // }
 };
 
 export { errorMiddleware };

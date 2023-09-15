@@ -1,4 +1,8 @@
-import { loginUserValidation, registerUserValidation } from "../validation/user-validation.js";
+import {
+    loginUserValidation,
+    registerUserValidation,
+    updateUserValidation,
+} from "../validation/user-validation.js";
 import { validate } from "../validation/validation.js";
 import { prismaClient } from "../application/database.js";
 import { ResponseError } from "../error/response-error.js";
@@ -69,7 +73,46 @@ const login = async (request) => {
     return users;
 };
 
+const update = async (username) => {
+    // lakukan validator
+    const user = validate(updateUserValidation, username);
+    console.info(user);
+    // cek database
+    const countUserUpdate = await prismaClient.user.count({
+        where: {
+            username: user.username,
+        },
+    });
+
+    if (countUserUpdate !== 1) {
+        throw new ResponseError(404, "User is not found");
+    }
+
+    // if data ready
+    const data = {};
+    if (user.name) {
+        data.name = user.name;
+    }
+
+    if (user.password) {
+        data.password = await bcrypt.hash(user.password, 10);
+    }
+
+    // update data
+    return prismaClient.user.update({
+        where: {
+            username: user.username,
+        },
+        data: user,
+        select: {
+            name: true,
+            username: true,
+        },
+    });
+};
+
 export default {
     register,
     login,
+    update,
 };
