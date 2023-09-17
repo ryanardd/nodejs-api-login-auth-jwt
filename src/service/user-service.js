@@ -8,7 +8,7 @@ import { prismaClient } from "../application/database.js";
 import { ResponseError } from "../error/response-error.js";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
-import { logger } from "../application/logging";
+import { logger } from "../application/logging.js";
 
 const register = async (request) => {
     // lakukan validation schema
@@ -76,7 +76,7 @@ const login = async (request) => {
 const update = async (username) => {
     // lakukan validator
     const user = validate(updateUserValidation, username);
-    console.info(user);
+
     // cek database
     const countUserUpdate = await prismaClient.user.count({
         where: {

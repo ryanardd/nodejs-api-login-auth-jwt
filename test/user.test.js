@@ -91,35 +91,30 @@ describe("PATCH /api/users/update", () => {
         await createTestUser();
     });
 
-    const fakeToken = jwt.sign({ id: 1 }, "secretkey");
-
     afterEach(async () => {
         await removeTestUser();
     });
 
     it("should can update data user", async () => {
-        // const result = await supertest(web).patch("/api/users/update").send({
-        //     username: "bejo",
-        //     password: "salah",
-        // });
-
-        // console.info(result.body);
-
-        // expect(result.status).toBe(200);
+        const fakeToken = jwt.sign(
+            {
+                username: "usertest",
+            },
+            process.env.ACCESS_TOKEN_SECRET
+        );
 
         // Menggunakan token palsu untuk otentikasi
-        const response = await supertest(web)
+        const result = await supertest(web)
             .patch("/api/users/update")
             .set("Authorization", `Bearer ${fakeToken}`)
             .send({
-                username: "bejo",
+                name: "bejo",
                 password: "salah",
             });
 
-        console.info(response.body);
+        console.info(result.body);
         // Memastikan respons berhasil
-        expect(response.status).toBe(200);
-        expect(response.body.message).toBe("Data pengguna berhasil diperbarui");
+        expect(result.status).toBe(200);
 
         // // Memeriksa apakah data pengguna telah diperbarui di database
         // const updatedUser = await prisma.user.findUnique({
