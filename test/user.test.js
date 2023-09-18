@@ -96,21 +96,11 @@ describe("PATCH /api/users/update", () => {
     });
 
     it("should can update data user", async () => {
-        const fakeToken = jwt.sign(
-            {
-                username: "usertest",
-            },
-            process.env.ACCESS_TOKEN_SECRET
-        );
-
         // Menggunakan token palsu untuk otentikasi
-        const result = await supertest(web)
-            .patch("/api/users/update")
-            .set("Authorization", `Bearer ${fakeToken}`)
-            .send({
-                name: "bejo",
-                password: "salah",
-            });
+        const result = await supertest(web).patch("/api/users/update").send({
+            username: "usertest",
+            password: "salah",
+        });
 
         console.info(result.body);
         // Memastikan respons berhasil

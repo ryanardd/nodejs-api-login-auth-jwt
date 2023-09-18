@@ -10,17 +10,16 @@ export const authMiddleware = async (req, res, next) => {
                 error: "Unauthorization",
             })
             .end();
+    } else {
+        jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, user) => {
+            if (err) {
+                res.status(403).json({
+                    error: "Token invalid",
+                });
+            }
+            req.user = user;
+
+            next();
+        });
     }
-
-    jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, user) => {
-        if (err) {
-            res.status(403).json({
-                error: "Token invalid",
-            });
-        }
-    });
-
-    req.user = user;
-
-    next();
 };

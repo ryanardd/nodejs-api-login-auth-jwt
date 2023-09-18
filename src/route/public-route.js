@@ -9,6 +9,6 @@ publicRouter.post("/api/users/login", userController.login);
 
 // route.use(authMiddleware);
 
-// route.patch("/api/users/update", userController.update);
+// publicRouter.patch("/api/users/update", userController.update);
 
 export { publicRouter };

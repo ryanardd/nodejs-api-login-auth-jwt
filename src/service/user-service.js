@@ -17,7 +17,7 @@ const register = async (request) => {
     // cek id database
     const countUserId = await prismaClient.user.count({
         where: {
-            id: user.id,
+            username: user.username,
         },
     });
 
@@ -73,9 +73,9 @@ const login = async (request) => {
     return users;
 };
 
-const update = async (username) => {
+const update = async (request) => {
     // lakukan validator
-    const user = validate(updateUserValidation, username);
+    const user = validate(updateUserValidation, request);
 
     // cek database
     const countUserUpdate = await prismaClient.user.count({
@@ -85,13 +85,13 @@ const update = async (username) => {
     });
 
     if (countUserUpdate !== 1) {
-        throw new ResponseError(404, "User is not found");
+        throw new ResponseError(404, "Username is not found");
     }
 
     // if data ready
     const data = {};
-    if (user.name) {
-        data.name = user.name;
+    if (user.username) {
+        data.username = user.username;
     }
 
     if (user.password) {
@@ -103,7 +103,7 @@ const update = async (username) => {
         where: {
             username: user.username,
         },
-        data: user,
+        data: data,
         select: {
             name: true,
             username: true,
