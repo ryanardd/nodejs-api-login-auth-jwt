@@ -27,14 +27,16 @@ const login = async (req, res, next) => {
 
 const update = async (req, res, next) => {
     try {
-        // const username = req.user.username;
+        const username = req.user;
 
         const request = req.body;
-        // request.username = username;
+        request.username = username;
 
         const result = await userService.update(request);
+        console.info(result);
         res.status(200).json({
             data: result,
+            message: "data berhasil diperbarui",
         });
     } catch (error) {
         next(error);

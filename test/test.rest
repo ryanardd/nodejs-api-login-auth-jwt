@@ -1,0 +1,22 @@
+### Login
+
+POST http://localhost:3000/api/users/
+
+content-type: application/json
+
+{
+    "name": "eko",
+    "username" : "eko",
+    "email" : "eko@gmail.com",
+    "password" : "rahasia"
+}
+
+###
+POST http://localhost:3000/api/users/login
+
+Content-Type: application/json;
+
+{
+    "username" : "mamat",
+    "password" : "rahasia"
+}

@@ -4,8 +4,8 @@ import { authMiddleware } from "../middleware/auth-middleware.js";
 
 const route = new express.Router();
 
-route.use(authMiddleware);
+// route.use(authMiddleware);
 
-route.patch("/api/users/update", userController.update);
+route.patch("/api/users/update", authMiddleware, userController.update);
 
 export { route };

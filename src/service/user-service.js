@@ -70,17 +70,19 @@ const login = async (request) => {
     const token = jwt.sign(users.username, process.env.ACCESS_TOKEN_SECRET);
 
     users.token = token;
+    console.info(users);
     return users;
 };
 
-const update = async (request) => {
+const update = async (username) => {
+    // MASIH ADA YANG SALAH
     // lakukan validator
-    const user = validate(updateUserValidation, request);
+    const user = validate(updateUserValidation, username);
 
     // cek database
     const countUserUpdate = await prismaClient.user.count({
         where: {
-            username: user.username,
+            username: user,
         },
     });
 
@@ -98,10 +100,11 @@ const update = async (request) => {
         data.password = await bcrypt.hash(user.password, 10);
     }
 
+    console.info(data);
     // update data
     return prismaClient.user.update({
         where: {
-            username: user.username,
+            username: user,
         },
         data: data,
         select: {

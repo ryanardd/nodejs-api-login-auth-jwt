@@ -87,20 +87,26 @@ describe("POST /api/users/login", () => {
 });
 
 describe("PATCH /api/users/update", () => {
+    let authToken;
     beforeEach(async () => {
-        await createTestUser();
-    });
+        // await createTestUser();
+        const loginResponse = await supertest(web)
+            .post("/api/users/login")
+            .send({ username: "usertest", password: "rahasia" }); // Ganti dengan data yang sesuai
+        authToken = loginResponse.body.token;
 
-    afterEach(async () => {
-        await removeTestUser();
+        console.info(loginResponse.body);
     });
 
     it("should can update data user", async () => {
         // Menggunakan token palsu untuk otentikasi
-        const result = await supertest(web).patch("/api/users/update").send({
-            username: "usertest",
-            password: "salah",
-        });
+        const result = await supertest(web)
+            .patch("/api/users/update")
+            .set("Authorization", `Bearer ${authToken}`)
+            .send({
+                username: "usertest",
+                password: "salah",
+            });
 
         console.info(result.body);
         // Memastikan respons berhasil
