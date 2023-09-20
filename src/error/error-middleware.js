@@ -11,7 +11,6 @@ const errorMiddleware = async (err, req, res, next) => {
             error: err.message,
         });
     } else {
-        //MASIH ADA YANG SALAH
         return res.status(500).json({
             error: err.message,
         });

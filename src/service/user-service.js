@@ -77,7 +77,6 @@ const login = async (request) => {
 };
 
 const update = async (request) => {
-    // MASIH ADA YANG SALAH
     // lakukan validator
     const user = validate(updateUserValidation, request);
 
