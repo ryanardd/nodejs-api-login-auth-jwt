@@ -50,6 +50,8 @@ const login = async (request) => {
             username: request.username,
         },
         select: {
+            id: true,
+            name: true,
             username: true,
             password: true,
         },
@@ -74,15 +76,15 @@ const login = async (request) => {
     return users;
 };
 
-const update = async (username) => {
+const update = async (request) => {
     // MASIH ADA YANG SALAH
     // lakukan validator
-    const user = validate(updateUserValidation, username);
+    const user = validate(updateUserValidation, request);
 
     // cek database
     const countUserUpdate = await prismaClient.user.count({
         where: {
-            username: user,
+            username: user.username,
         },
     });
 
@@ -96,15 +98,18 @@ const update = async (username) => {
         data.username = user.username;
     }
 
+    if (user.name) {
+        data.name = user.name;
+    }
+
     if (user.password) {
         data.password = await bcrypt.hash(user.password, 10);
     }
 
-    console.info(data);
     // update data
-    return prismaClient.user.update({
+    const update = await prismaClient.user.update({
         where: {
-            username: user,
+            username: data.username,
         },
         data: data,
         select: {
@@ -112,6 +117,8 @@ const update = async (username) => {
             username: true,
         },
     });
+    console.info(data);
+    return update;
 };
 
 export default {

@@ -4,8 +4,13 @@ import { authMiddleware } from "../middleware/auth-middleware.js";
 
 const route = new express.Router();
 
-// route.use(authMiddleware);
+route.use(function (req, res, next) {
+    res.header("Access-Control-Allow-Headers", "Authorization", "Origin, Content-Type, Accept");
+    next();
+});
 
-route.patch("/api/users/update", authMiddleware, userController.update);
+route.use(authMiddleware);
+
+route.patch("/api/users/update", userController.update);
 
 export { route };

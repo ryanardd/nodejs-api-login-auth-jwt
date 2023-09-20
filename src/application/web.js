@@ -10,5 +10,6 @@ web.use(express.json());
 
 web.use(publicRouter);
 web.use(route);
+// web.use("/users", route);
 
 web.use(errorMiddleware);
