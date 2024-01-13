@@ -1,5 +1,12 @@
 import userService from "../service/user-service.js";
 
+const get = async (req, res, next) => {
+    try {
+    } catch (error) {
+        next(error);
+    }
+};
+
 const register = async (req, res, next) => {
     try {
         // get data userService
@@ -32,10 +39,10 @@ const login = async (req, res, next) => {
 
 const update = async (req, res, next) => {
     try {
+        const user = req.user;
         const request = req.body;
 
-        const result = await userService.update(request);
-        console.info(result);
+        const result = await userService.update(user, request);
         res.status(200).json({
             data: result,
             message: "data berhasil diperbarui",
@@ -56,6 +63,7 @@ const logout = async (req, res, next) => {
 };
 
 export default {
+    get,
     register,
     login,
     update,

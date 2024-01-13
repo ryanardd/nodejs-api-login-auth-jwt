@@ -1,4 +1,5 @@
 import {
+    getUserValidation,
     loginUserValidation,
     registerUserValidation,
     updateUserValidation,
@@ -9,6 +10,8 @@ import { ResponseError } from "../error/response-error.js";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import { logger } from "../application/logging.js";
+
+const get = async (user) => {};
 
 const register = async (request) => {
     // lakukan validation schema
@@ -78,51 +81,57 @@ const login = async (request) => {
     return users;
 };
 
-const update = async (request) => {
+const update = async (user, request) => {
     // lakukan validator
-    const user = validate(updateUserValidation, request);
+    user = validate(getUserValidation, user.id);
 
     // cek database
     const countUserUpdate = await prismaClient.user.count({
         where: {
-            username: user.username,
+            id: user,
         },
     });
 
     if (countUserUpdate !== 1) {
-        throw new ResponseError(404, "Username is not found");
+        throw new ResponseError(404, "User is not found");
     }
+
+    request = validate(updateUserValidation, request);
 
     // if data ready
     const data = {};
-    if (user.username) {
-        data.username = user.username;
+    if (request.username) {
+        data.username = request.username;
     }
 
-    if (user.name) {
-        data.name = user.name;
+    if (request.name) {
+        data.name = request.name;
     }
 
-    if (user.password) {
-        data.password = await bcrypt.hash(user.password, 10);
+    if (request.email) {
+        data.email = request.email;
+    }
+
+    if (request.password) {
+        data.password = await bcrypt.hash(request.password, 10);
     }
 
     // update data
-    const update = await prismaClient.user.update({
+    return prismaClient.user.update({
         where: {
-            username: data.username,
+            id: user,
         },
         data: data,
         select: {
             name: true,
             username: true,
+            email: true,
         },
     });
-    console.info(data);
-    return update;
 };
 
 export default {
+    get,
     register,
     login,
     update,
