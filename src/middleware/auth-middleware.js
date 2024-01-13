@@ -2,9 +2,9 @@ import jwt from "jsonwebtoken";
 
 export const authMiddleware = async (req, res, next) => {
     const bearer = req.headers["authorization"];
-    let token = bearer.split(" ")[1];
+    // let token = bearer.split(" ")[1];
 
-    if (!token) {
+    if (!bearer) {
         return res.status(401).json({
             error: "Unauthorization",
         });

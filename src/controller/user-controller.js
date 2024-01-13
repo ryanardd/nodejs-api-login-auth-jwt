@@ -16,10 +16,15 @@ const login = async (req, res, next) => {
     try {
         // get data
         const result = await userService.login(req.body);
+        const data = {
+            id: result.id,
+            name: result.name,
+            username: result.username,
+        };
         res.status(200).json({
-            data: result,
+            data: data,
+            token: result.token,
         });
-        console.info(result);
     } catch (error) {
         next(error);
     }

@@ -11,7 +11,7 @@ const route = new express.Router();
 
 route.use(authMiddleware);
 
-route.patch("/api/users/update", userController.update);
-route.get("/api/users/logout", userController.logout);
+route.patch("/api/user/update", userController.update);
+route.get("/api/user/logout", userController.logout);
 
 export { route };

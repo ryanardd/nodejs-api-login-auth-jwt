@@ -49,12 +49,6 @@ const login = async (request) => {
         where: {
             username: request.username,
         },
-        select: {
-            id: true,
-            name: true,
-            username: true,
-            password: true,
-        },
     });
 
     // jika tidak ada
@@ -62,17 +56,25 @@ const login = async (request) => {
         throw new ResponseError(401, "username or password wrong");
     }
 
+    if (!users.password) {
+        throw new ResponseError(404, "Password not se");
+    }
+
     const comparePass = await bcrypt.compare(request.password, users.password);
     // jika tidak cocok
     if (!comparePass) {
         throw new ResponseError(401, "username or password wrong");
     }
+    const payload = {
+        id: users.id,
+        name: users.name,
+        username: users.username,
+    };
 
     // akses token
-    const token = jwt.sign(users.username, process.env.ACCESS_TOKEN_SECRET);
+    const token = jwt.sign(payload, process.env.ACCESS_TOKEN_SECRET);
 
     users.token = token;
-    console.info(users);
     return users;
 };
 
