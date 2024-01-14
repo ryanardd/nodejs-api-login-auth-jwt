@@ -11,7 +11,21 @@ import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import { logger } from "../application/logging.js";
 
-const get = async (user) => {};
+const get = async (user) => {
+    user = validate(getUserValidation, user.id);
+
+    const data = await prismaClient.user.findUnique({
+        where: {
+            id: user,
+        },
+    });
+
+    if (!data) {
+        throw new ResponseError(404, "user is not found");
+    }
+
+    return data;
+};
 
 const register = async (request) => {
     // lakukan validation schema

@@ -2,6 +2,14 @@ import userService from "../service/user-service.js";
 
 const get = async (req, res, next) => {
     try {
+        const user = req.user;
+
+        const result = await userService.get(user);
+        console.log(result.token);
+        res.status(200).json({
+            data: result,
+            message: "get data",
+        });
     } catch (error) {
         next(error);
     }

@@ -8,6 +8,6 @@ route.use(authMiddleware);
 
 route.get("/api/user/", userController.get);
 route.patch("/api/user/update", userController.update);
-route.get("/api/user/logout", userController.logout);
+route.post("/api/user/logout", userController.logout);
 
 export { route };
