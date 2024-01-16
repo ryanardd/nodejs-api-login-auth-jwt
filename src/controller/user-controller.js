@@ -36,9 +36,11 @@ const login = async (req, res, next) => {
             name: result.name,
             username: result.username,
         };
+        res.cookie("token", result.token, {
+            httpOnly: true,
+        });
         res.status(200).json({
             data: data,
-            token: result.token,
         });
     } catch (error) {
         next(error);
@@ -62,7 +64,7 @@ const update = async (req, res, next) => {
 
 const logout = async (req, res, next) => {
     try {
-        res.status(200).json({
+        res.status(200).clearCookie("token").json({
             message: "berhasil logout",
         });
     } catch (error) {
